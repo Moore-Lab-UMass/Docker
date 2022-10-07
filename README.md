@@ -6,7 +6,7 @@ This is the simpliest way to run the Docker container on a server cluster.
 
 To pull a Docker container you can use:
 
-`singularity pull docker://jordanvelezbomba/moore-lab:latest`
+`singularity pull docker://USER/REPO:TAGNAME`
 
 You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
@@ -14,7 +14,7 @@ You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
 You can bind directories using `--bind`.
 
-`singularity shell --bind /data:/container_data moore-lab_latest.sif`
+`singularity shell --bind /data:/container_data REPO_TAGNAME.sif`
 
 <https://docs.sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html>
 
