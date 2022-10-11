@@ -44,6 +44,7 @@ dependencies:
   - pybigwig
   - jupyterlab
   - umap-learn
+  - logomaker
   - pysam
   - plotnine
   - htseq
