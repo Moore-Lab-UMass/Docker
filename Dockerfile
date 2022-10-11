@@ -21,6 +21,7 @@ RUN apt-get update && apt-get upgrade -y && \
         libxml-compile-wsdl11-perl libconfig-json-perl  \
         libhtml-treebuilder-libxml-perl libhtml-template-perl \
         libhtml-parser-perl zlib1g-dev libxslt-dev \
+        libnvinfer-dev libcudart11.0 \
         r-base r-base-core r-base-dev r-cran-irkernel \
         r-recommended r-cran-devtools r-cran-rjava \
         r-cran-ggplot2 r-cran-ggforce r-cran-tidyverse \

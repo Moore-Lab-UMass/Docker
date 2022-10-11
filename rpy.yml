@@ -41,12 +41,11 @@ dependencies:
   - tensorflow
   - keras
   - pyfaidx
-  - pyBigWig
+  - pybigwig
   - jupyterlab
-  - umap-learnlogomaker
+  - umap-learn
   - pysam
   - plotnine
-  - snakemake
-  - HTSeq
-  - pyGenomeTracks
+  - htseq
+  - pygenometracks
   - mpl-scatter-density

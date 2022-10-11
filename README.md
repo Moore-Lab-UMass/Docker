@@ -8,6 +8,8 @@ To pull a Docker container you can use:
 
 `singularity pull docker://USER/REPO:TAGNAME`
 
+> Currently you can use `docker://jordanvelezbomba/moore-lab:latest`
+
 You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
 <https://docs.sylabs.io/guides/3.1/user-guide/cli.html>
@@ -15,6 +17,8 @@ You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 You can bind directories using `--bind`.
 
 `singularity shell --bind /data:/container_data REPO_TAGNAME.sif`
+
+> This will bind the dir `/data` from the server as `/container_data` (you can name this anything, probably best to just use `/data:/data` to keep scripts happy) inside the container. If you do not bind the data dir or give the `-writable` then the `/data` folder from the server will not be accessable.
 
 <https://docs.sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html>
 
@@ -179,6 +183,8 @@ This YML file is used to create the conda environment and contains a list of pac
 ### Ubuntu repository
 
 <https://packages.ubuntu.com>
+
+<https://pkgs.org>
 
 ### R packages
 
