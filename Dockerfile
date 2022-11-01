@@ -5,13 +5,13 @@ ENV TZ='America/New_York'
 
 RUN apt-get update && apt-get upgrade -y && \   
     apt-get install -y \
-        wget curl rsync \
-        git tree nano \
-        make cmake g++ gcc \
+        wget curl rsync nginx \
+        git tree nano nodejs \
+        make cmake g++ gcc npm \
         build-essential \
         samtools bamtools bedtools \
         libcurl4-openssl-dev libcurl4 libv8-dev \
-        libdeflate-dev libdeflate-tools \
+        libdeflate-dev libdeflate-tools libpq-dev \
         libcppnumericalsolvers-dev libeigen3-dev \
         libopenblas-base libopenblas-dev \        
         libxml2 libxml2-dev xml2 libgeos-dev \
@@ -72,16 +72,26 @@ RUN R -e "devtools::install_github('cole-trapnell-lab/monocle3', ref = 'develop'
 # cicero
 RUN R -e "devtools::install_github('cole-trapnell-lab/cicero-release', ref = 'monocle3')"
 
-RUN mkdir /opt/meme
-ADD http://meme-suite.org/meme-software/5.4.1/meme-5.4.1.tar.gz /opt/meme
-WORKDIR /opt/meme/
-RUN tar zxvf meme-5.4.1.tar.gz && rm -fv meme-5.4.1.tar.gz
-RUN cd /opt/meme/meme-5.4.1 && \
-    ./configure --prefix=/opt  --enable-build-libxml2 --enable-build-libxslt  && \
-    make && \
-    make install && \
-    rm -rfv /opt/meme
+# materialUI
+RUN npm install \
+@mui/material @emotion/react @emotion/styled \
+@mui/material @mui/styled-engine-sc styled-components \
+@fontsource/roboto \
+@mui/icons-material
 
-ENV PATH='/opt/libexec/meme-5.4.1:/opt/bin:${PATH}'
+# meme-suite
+# RUN mkdir /opt/meme
+# ADD http://meme-suite.org/meme-software/5.4.1/meme-5.4.1.tar.gz /opt/meme
+# WORKDIR /opt/meme/
+# RUN tar zxvf meme-5.4.1.tar.gz && rm -fv meme-5.4.1.tar.gz
+# RUN cd /opt/meme/meme-5.4.1 && \
+#     ./configure --prefix=/opt  --enable-build-libxml2 --enable-build-libxslt  && \
+#     make && \
+#     make install && \
+#     rm -rfv /opt/meme
+
+# ENV PATH='/opt/libexec/meme-5.4.1:/opt/bin:${PATH}'
 
 # CMD ['python']
+
+# WORKDIR /

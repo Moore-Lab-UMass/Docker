@@ -1,10 +1,11 @@
-name: rpy-env
+name: rpy-macs
 channels:
   - defaults
   - conda-forge
   - bioconda
   - anaconda
 dependencies:
+  - macs
   - r-base
   - python
   - ipython

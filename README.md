@@ -16,9 +16,9 @@ You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
 You can bind directories using `--bind`.
 
-`singularity shell --bind /data:/container_data REPO_TAGNAME.sif`
+`singularity shell --bind /[LOCAL PATH]:/[CONTAINER PATH] REPO_TAGNAME.sif`
 
-> This will bind the dir `/data` from the server as `/container_data` (you can name this anything, probably best to just use `/data:/data` to keep scripts happy) inside the container. If you do not bind the data dir or give the `-writable` then the `/data` folder from the server will not be accessable.
+> This will bind the dir `/[LOCAL PATH]` from the server as `/[CONTAINER PATH]` (you can name this anything, probably best to just use `/data:/data` to keep scripts happy) inside the container. If you do not bind the data dir or give the `-writable` then the `/data` folder from the server will not be accessable.
 
 <https://docs.sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html>
 
@@ -50,11 +50,19 @@ Build a container (must rebuild after any changes to the Dockerfile)
 
 Run bash inside the container
 
-`docker run -ti rpy`
+`docker run -ti USER/REPO:TAGNAME`
 
 This is to mount a local directory to the container to share files between the container and local / server. You can use this if the scripts you are using and the data is in the same directory and any files produced from running the scripts will be put in the same folder. /root/data/ is where the local dir you input will be referenced.
 
-`docker run -v [LOCAL DIR]:/root/data/ -ti rpy`
+`docker run -it --mount type=bind,src=[LOCAL PATH],dst=[CONTAINER PATH]`
+
+`--mount` is the recommended way to mount a directory to a container, but `-volume` will not be deprecated and can still be used like so:
+
+`docker run -v [LOCAL DIR]:/root/data/ -ti USER/REPO:TAGNAME`
+
+For mounting a volume as read-only:
+
+`docker run --read-only --mount type=volume,target=/icanwrite /icanwrite/here`
 
 Connecting container to server / local machine.
 
@@ -105,12 +113,12 @@ To activate the environment inside the container use `source` instead of `conda`
 
 ### Local machine / Server distribution
 
-`conda activate rpy-env`  
+`conda activate rpy-macs`  
 `conda deactivate`
 
 ### Container
 
-`source activate rpy-env`  
+`source activate rpy-macs`  
 `source deactivate`
 
 ## Installing R packages
@@ -119,9 +127,9 @@ Call this cmd while the env is active to install all the r packages.
 
 `Rscript install_packages_conda.R`
 
-If you want to install additional packages, just make sure that the dir they are being installed to is `~/miniconda3/envs/rpy-env/lib/R/library` by using the `destdir` parameter in the `install_packages()` command. For example:
+If you want to install additional packages, just make sure that the dir they are being installed to is `~/miniconda3/envs/rpy-macs/lib/R/library` by using the `destdir` parameter in the `install_packages()` command. For example:
 
-`Rscript install_packages("ggplot2", destdir = "~/miniconda3/envs/rpy-env/lib/R/library")`
+`Rscript install_packages("ggplot2", destdir = "~/miniconda3/envs/rpy-macs/lib/R/library")`
 
 Otherwise it will try to install it into the default R folder and will not be available in the environment. If you get a CRAN mirror error, set the options.
 
@@ -139,12 +147,15 @@ Otherwise it will try to install it into the default R folder and will not be av
 
 ### Additional packages
 
-`pip -m install [PACKAGE]`  
-or  
-`conda install [PACKAGE]`
-
-Use pip3 if on Ubuntu.  
+Using pip3 or pip
 `pip3 install [PACKAGE]`
+
+or
+
+`pip install [PACKAGE]`
+
+In conda environment
+`conda install [PACKAGE]`
 
 To update installed pacakges (python)
 `pip install --upgrade -r requirements.txt`
@@ -158,7 +169,7 @@ To update R packages. If there is a major R version change use set option `check
 
 `apt-get install -y \`
 
-In the Dockerfile you can add libraries and applications to install in the container under this line but remember anything installed while in the container is not persistant.
+In the Dockerfile you can add libraries and applications to install in the container under this line.
 
 ### Adding Python packages
 
@@ -176,7 +187,7 @@ This is an R script that contains the packages to install for R. To add more you
 
 `rpy.yml`
 
-This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages.
+This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages. This is used to create a conda environment with python 2 and macs.
 
 ## Resources
 
