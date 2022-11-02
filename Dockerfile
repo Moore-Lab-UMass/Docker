@@ -31,14 +31,18 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# encode tools
+RUN rsync -aP hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/ ./
+ENV PATH="$PATH:./ >> ~/.bashrc"
+
 # install python dependencies
 RUN pip3 install \
         numpy pandas torch tqdm transformers \
         scikit-learn eli5 scipy matplotlib xarray \
         tensorflow keras pyfaidx pyBigWig \
         umap-learn logomaker pysam plotnine \
-        snakemake HTSeq pyGenomeTracks \
-        mpl-scatter-density encode_utils
+        HTSeq pyGenomeTracks mpl-scatter-density \
+        encode_utils
 
 # install R packages
 RUN R -e "install.packages(c( \
@@ -52,19 +56,20 @@ RUN R -e "install.packages(c( \
         'cowplot', 'shiny', 'tidytree', 'data.table', \
         'scales', 'DT', 'ggseqlogo', 'pheatmap', 'wordcloud', \
         'wordcloud2', 'microplot', 'rmeta', 'plotly'), \
-        dependencies = TRUE)"
+    dependencies = TRUE)"
 
 # install bioconducter dependencies
 RUN R -e "BiocManager::install(c( \
-            'BiocGenerics', 'DelayedArray', 'DelayedMatrixStats', \
-            'limma', 'lme4', 'S4Vectors', 'SingleCellExperiment', \
-            'SummarizedExperiment', 'batchelor', 'Matrix.utils', \
-            'HDF5Array', 'terra', 'ggrastr', 'Gviz', 'DESeq2', \
-            'GenomicRanges', 'rtracklayer', 'edgeR', \
-            'ggtree', 'treeio', 'org.Mm.eg.db', 'org.Hs.eg.db', \
-            'org.Dm.eg.db', 'org.Ce.eg.db', \
-            'BSgenome.Hsapiens.UCSC,hg38', \
-            'BSgenome.Mmusculus.UCSC.mm10', 'DEXSeq'))"
+        'BiocGenerics', 'DelayedArray', 'DelayedMatrixStats', \
+        'limma', 'lme4', 'S4Vectors', 'SingleCellExperiment', \
+        'SummarizedExperiment', 'batchelor', 'Matrix.utils', \
+        'HDF5Array', 'terra', 'ggrastr', 'Gviz', 'DESeq2', \
+        'GenomicRanges', 'rtracklayer', 'edgeR', 'DEXSeq', \
+        'ggtree', 'treeio', 'org.Mm.eg.db', 'org.Hs.eg.db', \
+        'org.Dm.eg.db', 'org.Ce.eg.db', \
+        'BSgenome.Hsapiens.UCSC,hg38', \
+        'BSgenome.Mmusculus.UCSC.mm10' \
+    ))"
 
 # monocle3
 RUN R -e "devtools::install_github('cole-trapnell-lab/monocle3', ref = 'develop')"
@@ -72,12 +77,10 @@ RUN R -e "devtools::install_github('cole-trapnell-lab/monocle3', ref = 'develop'
 # cicero
 RUN R -e "devtools::install_github('cole-trapnell-lab/cicero-release', ref = 'monocle3')"
 
-# materialUI
-RUN npm install \
-@mui/material @emotion/react @emotion/styled \
-@mui/material @mui/styled-engine-sc styled-components \
-@fontsource/roboto \
-@mui/icons-material
+# atacworks
+# RUN git clone --recursive https://github.com/clara-genomics/AtacWorks.git
+# RUN cd AtacWorks && pip3 install -r requirements.txt
+# RUN pip3 install .
 
 # meme-suite
 # RUN mkdir /opt/meme
@@ -94,4 +97,15 @@ RUN npm install \
 
 # CMD ['python']
 
-# WORKDIR /
+## TESTING ##
+
+# RUN pip3 install \
+#         atackworks
+
+# RUN R -e "install.packages(c( \
+#         '' \
+#         dependencies = TRUE)"
+
+# RUN R -e "BiocManager::install(c( \
+#             '' \
+#           ))"

@@ -103,6 +103,10 @@ If you are on your local machine or linux server you can use this cmd to create 
 `conda env create -f rpy.yml`  
 `conda env create -f /[DIR TO YML FILE]/rpy.yml`
 
+For macs2 environment.
+
+`conda env create -f macs.yml`  
+
 <!-- If you are inside the container use this to create the environment.
 
 `conda env create -f /src/rpy.yml` -->
@@ -113,12 +117,18 @@ To activate the environment inside the container use `source` instead of `conda`
 
 ### Local machine / Server distribution
 
-`conda activate rpy-macs`  
+For R and python3 environment
+
+`conda activate rpy-env`  
 `conda deactivate`
+
+For macs2 environment
+
+`conda activate macs-py2.7`
 
 ### Container
 
-`source activate rpy-macs`  
+`source activate rpy-env`  
 `source deactivate`
 
 ## Installing R packages
@@ -187,7 +197,11 @@ This is an R script that contains the packages to install for R. To add more you
 
 `rpy.yml`
 
-This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages. This is used to create a conda environment with python 2 and macs.
+This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages. 
+
+`macs.yml`
+
+This is used to create a conda environment with python 2.7 and macs.
 
 ## Resources
 
