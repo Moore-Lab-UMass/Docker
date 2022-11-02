@@ -197,7 +197,7 @@ This is an R script that contains the packages to install for R. To add more you
 
 `rpy.yml`
 
-This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages. 
+This YML file is used to create the conda environment and contains a list of packages to install. It contains the applications, libraries, and python packages.
 
 `macs.yml`
 
