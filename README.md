@@ -46,6 +46,14 @@ Build a container (must rebuild after any changes to the Dockerfile)
 
 `docker build -f Dockerfile -t USER/REPO:TAGNAME .`
 
+Clean up docker (building takes up alot of system space, this will clean up the storage)
+
+`docker builder prune --all`
+
+For dangling images and containers
+
+`docker system prune --all`
+
 ## Running docker container
 
 Run bash inside the container
