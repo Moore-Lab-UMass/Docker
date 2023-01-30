@@ -14,11 +14,15 @@ You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
 <https://docs.sylabs.io/guides/3.1/user-guide/cli.html>
 
-You can bind directories using `--bind`.
+You can execute scripts and files with `exec`
+
+`singularity exec REPO_TAGNAME.sif python3 ./hello_world.py`
+
+You can run shell on top of the os using `shell` and bind directories using `--bind`.
 
 `singularity shell --bind /[LOCAL PATH]:/[CONTAINER PATH] REPO_TAGNAME.sif`
 
-> This will bind the dir `/[LOCAL PATH]` from the server as `/[CONTAINER PATH]` (you can name this anything, probably best to just use `/data:/data` to keep scripts happy) inside the container. If you do not bind the data dir or give the `-writable` then the `/data` folder from the server will not be accessable.
+> This will bind the dir `/[LOCAL PATH]` from the server as `/[CONTAINER PATH]` (you can name this anything, probably best to just use `/data:/data` to keep scripts happy) inside the container. If you do not bind the data dir or give the `-writable` then the `/data` folder from the server will not be accessable. Note that when binding try to bind the least amount of data possible to limit the stress on the server, for example if my data is in `/data/[LAB]/[USER]/project` then I would bind that whole directory NOT something like `/data/[LAB]/`, e.g. `singularity shell --bind /data/[LAB]/[USER]/project:/[CONTAINER PATH] REPO_TAGNAME.sif`
 
 <https://docs.sylabs.io/guides/3.1/user-guide/bind_paths_and_mounts.html>
 
