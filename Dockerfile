@@ -12,7 +12,7 @@ RUN apt-get update && apt-get upgrade -y && \
         make cmake g++ gcc \
         build-essential \
         samtools bamtools bedtools \
-        libcurl4-openssl-dev libcurl4 libnode-dev \
+        libcurl4 libcurl4-gnutls-dev libnode-dev \
         libdeflate-dev libdeflate-tools libpq-dev \
         libcppnumericalsolvers-dev libeigen3-dev libeigen3-doc \
         libopenblas-base libopenblas-dev libmpfrc++-dev \        
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get upgrade -y && \
         libhtml-treebuilder-libxml-perl libhtml-template-perl \
         libhtml-parser-perl zlib1g-dev libxslt1-dev libcudart11.0 \
         nvidia-cuda-dev nvidia-cuda-toolkit nvidia-cuda-gdb \
-        nvidia-cuda-toolkit-gcc nvidia-cuda-doc \
+        nvidia-cuda-toolkit-gcc nvidia-cuda-toolkit-doc \
         r-base r-base-core r-base-dev r-cran-irkernel \
         r-recommended r-cran-devtools r-cran-rjava \
         r-cran-ggplot2 r-cran-ggforce r-cran-tidyverse r-cran-markdown \
@@ -39,11 +39,11 @@ RUN rsync -aP hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/ ./encode
 ENV PATH="$PATH:./encode >> ~/.bashrc"
 
 # nvm & npm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-RUN nvm install node
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+# RUN nvm install node
 
 # yarn
-RUN npm install --global yarn
+# RUN npm install --global yarn
 
 # install python dependencies
 RUN pip3 install \
@@ -65,7 +65,7 @@ RUN R -e "install.packages(c( \
         'gganimate', 'ggthemes', 'ggrepel', 'ggforce', \
         'cowplot', 'shiny', 'tidytree', 'data.table', \
         'scales', 'DT', 'ggseqlogo', 'pheatmap', 'wordcloud', \
-        'wordcloud2', 'microplot', 'rmeta', 'plotly'), \
+        'wordcloud2', 'microplot', 'rmeta', 'plotly', 'RCurl'), \
     dependencies = TRUE)"
 
 # install bioconducter dependencies
