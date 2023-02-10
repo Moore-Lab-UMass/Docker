@@ -38,13 +38,6 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN rsync -aP hgdownload.soe.ucsc.edu::genome/admin/exe/linux.x86_64/ ./encode
 ENV PATH="$PATH:./encode >> ~/.bashrc"
 
-# nvm & npm
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-# RUN nvm install node
-
-# yarn
-# RUN npm install --global yarn
-
 # install python dependencies
 RUN pip3 install \
         numpy pandas torch tqdm transformers \
@@ -88,24 +81,54 @@ RUN R -e "devtools::install_github('cole-trapnell-lab/monocle3', ref = 'develop'
 RUN R -e "devtools::install_github('cole-trapnell-lab/cicero-release', ref = 'monocle3')"
 
 # meme-suite
-# RUN mkdir /opt/meme
-# ADD http://meme-suite.org/meme-software/5.4.1/meme-5.4.1.tar.gz /opt/meme
-# WORKDIR /opt/meme/
-# RUN tar zxvf meme-5.4.1.tar.gz && rm -fv meme-5.4.1.tar.gz
-# RUN cd /opt/meme/meme-5.4.1 && \
-#     ./configure --prefix=/opt  --enable-build-libxml2 --enable-build-libxslt  && \
-#     make && \
-#     make install && \
-#     rm -rfv /opt/meme
-
-# ENV PATH='/opt/libexec/meme-5.4.1:/opt/bin:${PATH}'
-
-# CMD ['python']
+RUN mkdir /opt/meme
+ADD http://meme-suite.org/meme-software/5.4.1/meme-5.4.1.tar.gz /opt/meme
+WORKDIR /opt/meme/
+RUN tar zxvf meme-5.4.1.tar.gz && rm -fv meme-5.4.1.tar.gz
+RUN cd /opt/meme/meme-5.4.1 && \
+    ./configure --prefix=/opt  --enable-build-libxml2 --enable-build-libxslt  && \
+    make && \
+    make install && \
+    rm -rfv /opt/meme
+ENV PATH='/opt/libexec/meme-5.4.1:/opt/bin:${PATH}'
+CMD ["python"]
 
 # atacworks
-# RUN git clone --recursive https://github.com/clara-genomics/AtacWorks.git
-# RUN cd AtacWorks && pip3 install -r requirements.txt
-# RUN pip3 install .
+RUN git clone --recursive https://github.com/clara-genomics/AtacWorks.git
+RUN cd AtacWorks && pip3 install -r requirements.txt
+RUN pip3 install .
+
+# nvm & npm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+RUN nvm install node
+
+# yarn
+RUN npm install --global yarn
+
+## MULTI-STAGE BUILD ##
+
+# first image
+
+FROM node:14-alpine
+
+RUN mkdir -p /app/
+COPY ui /app
+COPY gcp.json /app/config.json
+COPY gcp.json /app/src/config.json
+
+WORKDIR /app/
+
+# final image
+
+FROM nginx:1.13-alpine
+
+RUN mkdir -p /app/
+COPY  --from=0 /app/build /usr/share/nginx/html
+COPY assets /usr/share/nginx/html/assets
+COPY --from=0 /app/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 3000
+CMD [ "nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;" ]
 
 ## TESTING ##
 
@@ -119,5 +142,3 @@ RUN R -e "devtools::install_github('cole-trapnell-lab/cicero-release', ref = 'mo
 # RUN R -e "BiocManager::install(c( \
 #             '' \
 #           ))"
-
-#  libnvcuvid1

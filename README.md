@@ -1,5 +1,73 @@
 # Virtual Environments
 
+## Slurm
+
+When running scripts and/or files on the server you need to be considerate of allocated resources. To do this you need to manage data properly and submit jobs using Slurm.
+
+The script above, `scripts.sh`, provides a template of how to wrap any scripts and files in a slurm script, sleep between jobs, and manage the temporary data. There are a few ways to submit a slurm job, these are two quick examples.
+
+``` bash
+#SBATCH --nodes 1
+#SBATCH --time=60:00:00
+#SBATCH --mem=10G
+#SBATCH --output=~/Job-Logs/jobid_%A.output
+#SBATCH --error=~/Job-Logs/jobid_%A.error
+#SBATCH --partition=5days
+
+MINWAIT=10
+MAXWAIT=120
+
+# sleep to give the server some relief (reallocate memory)
+sleep $((MINWAIT+RANDOM % (MAXWAIT-MINWAIT)))
+
+# copy and unzip into /tmp
+
+# sleep
+sleep $((MINWAIT+RANDOM % (MAXWAIT-MINWAIT)))
+
+# execute 
+singularity exec -B $dataDir:/data REPO_TAGNAME.sif python3 hello-world.py > output.txt
+
+# sleep
+sleep $((MINWAIT+RANDOM % (MAXWAIT-MINWAIT)))
+
+# copy results and delete /tmp
+```
+
+You can also wrap scripts with sbatch instead of using the sbatch headers. This is good for running scripts that do not need a singularity image.
+
+``` bash
+for x in $(cat halLiftover-L.txt | cut -f1); do 
+    echo $x; 
+    sbatch -N 1 \ 
+        -nodes 24 \ 
+        -time 240 \ 
+        --mem=90G \
+        -partition 4hours \
+        -J $x \
+        -error ~/logs/$x.err \
+        -output ~/logs/$x.out \
+        --wrap="bash run.sh $x"; 
+    sleep 5; done
+```
+
+### TLDR
+
+1. Wrap any scripts and/or files in a bash script or loop
+2. Create a `/tmp` dir
+3. Copy everything to `/tmp`
+4. Random sleep
+5. Binding of `/data`
+6. Execute slurm script using singularity `exec` (sleep in between submissions)
+7. Random sleep
+8. Copy results
+9. Delete the `/tmp dir`
+
+### Cheatsheat
+
+<https://slurm.schedmd.com/pdfs/summary.pdf>
+<https://slurm.schedmd.com/quickstart.html>
+
 ## Singularity
 
 This is the simpliest way to run the Docker container on a server cluster.
@@ -38,8 +106,8 @@ Check installation
 
 ## Docker repositories
 
-`docker pull USER/REPO:TAGNAME`  
-`docker push USER/REPO:TAGNAME`
+`docker image pull USER/REPO:TAGNAME`  
+`docker image push USER/REPO:TAGNAME`
 
 <https://docs.docker.com/engine/reference/commandline/pull/>  
 <https://docs.docker.com/engine/reference/commandline/push/>
