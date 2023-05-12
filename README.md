@@ -76,8 +76,6 @@ To pull a Docker container you can use:
 
 `singularity pull docker://USER/REPO:TAGNAME`
 
-> Currently you can use `docker://jordanvelezbomba/moore-lab:latest`
-
 You can use `run`,`exec`,`shell`, and `instance start` to use the container.
 
 <https://docs.sylabs.io/guides/3.1/user-guide/cli.html>
